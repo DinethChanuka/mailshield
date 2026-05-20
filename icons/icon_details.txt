@@ -1,0 +1,63 @@
+# MailShield Icon Pack
+# Download these icons (SVG or PNG with transparent background) and place them in this icons/ directory.
+# Recommended: Use https://lucide.dev/icons/ or Material Design Icons for free, clean SVG icons.
+#
+# Format: filename | size | format | description / usage location
+#
+# Sidebar Navigation
+inbox.svg            | 20x20 | SVG  | Mail envelope - Sidebar "Inbox" button
+starred.svg          | 20x20 | SVG  | Star - Sidebar "Starred" button
+sent.svg             | 20x20 | SVG  | Paper plane / send arrow - Sidebar "Sent" button
+drafts.svg           | 20x20 | SVG  | Pencil/edit icon - Sidebar "Drafts" button
+trash.svg            | 20x20 | SVG  | Trash can - Sidebar "Trash" button
+settings.svg         | 20x20 | SVG  | Gear cog - Sidebar "Settings" button
+security.svg         | 20x20 | SVG  | Shield - Toolbar "Security" button
+sync.svg             | 20x20 | SVG  | Refresh/cycle arrows - Toolbar "Sync" button
+contacts.svg         | 20x20 | SVG  | Address book / people - Sidebar "Contacts" button
+mailboxes.svg        | 20x20 | SVG  | Mailbox / inbox tray - "Mailboxes" label icon
+categories.svg       | 20x20 | SVG  | Tag or label - "Categories" label icon
+compose.svg          | 18x18 | SVG  | Pen/new message icon - Compose button overlay
+#
+# Status Indicators (small, 14-16px)
+dot-safe.svg         | 14x14 | SVG  | Green circle dot - Safe risk indicator
+dot-warning.svg      | 14x14 | SVG  | Yellow/amber circle dot - Suspicious indicator
+dot-danger.svg       | 14x14 | SVG  | Red circle dot - Dangerous indicator
+#
+# Attachment Icons (16x16)
+attachment.svg       | 16x16 | SVG  | Paperclip - Email has attachment
+file-generic.svg     | 20x20 | SVG  | Document with folded corner - Generic attachment
+file-image.svg       | 20x20 | SVG  | Picture/image icon - Image attachment preview
+file-pdf.svg         | 20x20 | SVG  | PDF icon (red) - PDF attachment
+download.svg         | 18x18 | SVG  | Download arrow - Download attachment button
+#
+# App Logo
+logo.svg             | 48x48 | SVG  | Shield with envelope - App window title bar, splash
+logo-login.svg       | 64x64 | SVG  | Larger shield+envelope - Login dialog
+#
+# Action Icons
+reply.svg            | 18x18 | SVG  | Reply arrow - Email action bar "Reply"
+forward.svg          | 18x18 | SVG  | Forward arrow - Email action bar "Forward"
+reply-all.svg        | 18x18 | SVG  | Reply-all arrows - Email action bar "Reply All"
+delete.svg           | 18x18 | SVG  | Trash can - Email action bar "Delete"
+archive.svg          | 18x18 | SVG  | Archive box - Email action bar "Archive"
+star-fill.svg        | 18x18 | SVG  | Filled star - Star/unstar email
+star-off.svg         | 18x18 | SVG  | Outline star - Star/unstar email
+search.svg           | 18x18 | SVG  | Magnifying glass - Search field icon
+close.svg            | 16x16 | SVG  | X mark - Close dialog/button
+check.svg            | 14x14 | SVG  | Checkmark - Safe/OK indicator
+warning.svg          | 14x14 | SVG  | Warning triangle - Warning indicator
+error.svg            | 14x14 | SVG  | Error/stop octagon - Error indicator
+shield-check.svg     | 18x18 | SVG  | Shield with check - Security verified
+shield-alert.svg     | 18x18 | SVG  | Shield with alert - Security warning
+link.svg             | 14x14 | SVG  | Chain link - URL/link indicator
+external-link.svg    | 14x14 | SVG  | External link arrow - Open link externally
+user.svg             | 18x18 | SVG  | Person silhouette - Contact avatar fallback
+theme.svg            | 20x20 | SVG  | Sun/moon toggle - Theme switch button
+#
+# Notes:
+# - All icons should use a consistent visual style (Material Design or Lucide recommended)
+# - Use light stroke (1.5-2px) for outline icons in dark theme
+# - Color icons should have transparent backgrounds
+# - PNG alternative: 32x32 and 16x16 variants with @2x for retina
+# - Sidebar icons: 20x20 with 4px padding in 28x28 button hit area
+# - Icon color will be controlled via CSS (use currentColor for fill/stroke)

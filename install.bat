@@ -1,0 +1,215 @@
+@echo off
+setlocal EnableDelayedExpansion
+chcp 65001 >nul 2>&1
+
+:: ─────────────────────────────────────────────────────────────────────────────
+:: MailShield – Windows Installer
+:: Requires: Windows 10 / 11 (64-bit), Python 3.9–3.12
+:: Run this file as a normal user (no admin needed unless Python is missing)
+:: ─────────────────────────────────────────────────────────────────────────────
+
+title MailShield Installer
+
+echo.
+echo  =============================================
+echo   __  __       _ _ ____  _     _      _     _
+echo  ^|  \/  ^| __ _^(_^) / ___^|^| ^|__ ^(_^) ___^| ^| __^| ^|
+echo  ^| ^|\/^| ^|/ _` ^| ^| \___ \^| '_ \^| ^|/ _ \ ^|/ _` ^|
+echo  ^| ^|  ^| ^| ^(_^| ^| ^| ^|___^) ^| ^| ^| ^| ^|  __/ ^| ^(_^| ^|
+echo  ^|_^|  ^|_^|\__,_^|_^|_^|____/^|_^| ^|_^|_^|\___ ^|_^|\__,_^|
+echo  =============================================
+echo   Secure Email Client  --  Windows Installer
+echo  =============================================
+echo.
+
+:: ── Python detection ──────────────────────────────────────────────────────────
+echo [INFO]  Searching for Python 3.9 - 3.12 ...
+echo.
+
+set PYTHON_CMD=
+set PYTHON_VER=
+
+:: Try py launcher first (preferred on Windows)
+for %%v in (3.12 3.11 3.10 3.9) do (
+    if not defined PYTHON_CMD (
+        py -%%v --version >nul 2>&1
+        if !errorlevel! equ 0 (
+            set PYTHON_CMD=py -%%v
+            set PYTHON_VER=%%v
+        )
+    )
+)
+
+:: Fall back to plain python3 / python
+if not defined PYTHON_CMD (
+    python3 --version >nul 2>&1
+    if !errorlevel! equ 0 (
+        set PYTHON_CMD=python3
+        for /f "tokens=2" %%v in ('python3 --version 2^>^&1') do set PYTHON_VER=%%v
+    )
+)
+if not defined PYTHON_CMD (
+    python --version >nul 2>&1
+    if !errorlevel! equ 0 (
+        set PYTHON_CMD=python
+        for /f "tokens=2" %%v in ('python --version 2^>^&1') do set PYTHON_VER=%%v
+    )
+)
+
+if not defined PYTHON_CMD (
+    echo [ERROR] Python 3.9-3.12 was not found on this machine.
+    echo.
+    echo  Download Python from: https://www.python.org/downloads/
+    echo  Make sure to check "Add Python to PATH" during installation.
+    echo.
+    pause
+    exit /b 1
+)
+
+echo [OK]    Found Python %PYTHON_VER% using: %PYTHON_CMD%
+echo.
+
+:: ── Virtual environment ───────────────────────────────────────────────────────
+echo [INFO]  Setting up virtual environment ...
+
+if exist .venv\ (
+    echo [WARN]  Existing .venv found -- recreating
+    rmdir /s /q .venv
+)
+
+%PYTHON_CMD% -m venv .venv
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to create virtual environment.
+    pause
+    exit /b 1
+)
+echo [OK]    Virtual environment created at .venv\
+
+:: Activate
+call .venv\Scripts\activate.bat
+if %errorlevel% neq 0 (
+    echo [ERROR] Could not activate virtual environment.
+    pause
+    exit /b 1
+)
+echo [OK]    Virtual environment activated
+echo.
+
+:: ── Upgrade pip ───────────────────────────────────────────────────────────────
+echo [INFO]  Upgrading pip, wheel, setuptools ...
+python -m pip install --upgrade pip wheel setuptools --quiet
+echo [OK]    pip upgraded
+echo.
+
+:: ── PyQt5 ────────────────────────────────────────────────────────────────────
+echo [INFO]  Installing PyQt5 + WebEngine (this may take a minute) ...
+pip install PyQt5 PyQtWebEngine --quiet
+if %errorlevel% neq 0 (
+    echo [WARN]  PyQt5 install reported an issue -- retrying with verbose output
+    pip install PyQt5 PyQtWebEngine
+    if %errorlevel% neq 0 (
+        echo [ERROR] PyQt5 installation failed.
+        echo         Try running manually: pip install PyQt5 PyQtWebEngine
+        pause
+        exit /b 1
+    )
+)
+echo [OK]    PyQt5 installed
+echo.
+
+:: ── Core dependencies ─────────────────────────────────────────────────────────
+echo [INFO]  Installing core dependencies ...
+pip install ^
+    "bcrypt>=4.0" ^
+    "certifi>=2024.1" ^
+    "chardet>=5.0" ^
+    "beautifulsoup4>=4.12" ^
+    "pycryptodome>=3.20" ^
+    --quiet
+
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to install one or more packages.
+    echo         Check your internet connection and try again.
+    pause
+    exit /b 1
+)
+echo [OK]    All dependencies installed
+echo.
+
+:: ── Verify imports ────────────────────────────────────────────────────────────
+echo [INFO]  Verifying imports ...
+set VERIFY_ERRORS=0
+
+call :check_import "PyQt5.QtWidgets"           "PyQt5 (core)"
+call :check_import "PyQt5.QtSvg"               "PyQt5.QtSvg"
+call :check_import "PyQt5.QtWebEngineWidgets"  "PyQt5.QtWebEngine"
+call :check_import "bcrypt"                    "bcrypt"
+call :check_import "certifi"                   "certifi"
+call :check_import "chardet"                   "chardet"
+call :check_import "bs4"                       "beautifulsoup4"
+call :check_import "Crypto.Cipher"             "pycryptodome"
+
+echo.
+
+:: ── Create launcher ───────────────────────────────────────────────────────────
+echo [INFO]  Creating launcher (mailshield.bat) ...
+(
+echo @echo off
+echo :: MailShield Launcher -- generated by install.bat
+echo cd /d "%%~dp0"
+echo call "%%~dp0.venv\Scripts\activate.bat"
+echo set QTWEBENGINE_DISABLE_SANDBOX=1
+echo start "" python main.py %%*
+) > mailshield.bat
+echo [OK]    Launcher: mailshield.bat
+echo.
+
+:: ── Optional: Windows shortcut ────────────────────────────────────────────────
+echo [INFO]  Creating desktop shortcut ...
+set SHORTCUT_PATH=%USERPROFILE%\Desktop\MailShield.lnk
+set SCRIPT_PATH=%~dp0mailshield.bat
+
+powershell -NoProfile -Command ^
+  "$ws = New-Object -ComObject WScript.Shell; $s = $ws.CreateShortcut('%SHORTCUT_PATH%'); $s.TargetPath = '%SCRIPT_PATH%'; $s.WorkingDirectory = '%~dp0'; $s.Description = 'MailShield – Secure Email Client'; $s.Save()" ^
+  >nul 2>&1
+
+if exist "%SHORTCUT_PATH%" (
+    echo [OK]    Desktop shortcut created
+) else (
+    echo [WARN]  Could not create desktop shortcut -- run mailshield.bat directly
+)
+echo.
+
+:: ── Summary ───────────────────────────────────────────────────────────────────
+echo  =============================================
+if %VERIFY_ERRORS% equ 0 (
+    echo   OK  Installation complete!
+) else (
+    echo   !!  Installation finished with %VERIFY_ERRORS% warning(s^)
+)
+echo  =============================================
+echo.
+echo  Run MailShield:
+echo    Double-click  mailshield.bat
+echo    -- or --
+echo    Double-click  MailShield  on your Desktop
+echo.
+echo  Manual launch:
+echo    .venv\Scripts\activate ^&^& python main.py
+echo.
+pause
+exit /b 0
+
+
+:: ── Subroutine: check one import ─────────────────────────────────────────────
+:check_import
+set MOD=%~1
+set LABEL=%~2
+python -c "import %MOD%" >nul 2>&1
+if %errorlevel% equ 0 (
+    echo [OK]    %LABEL%
+) else (
+    echo [WARN]  Cannot import %LABEL%
+    set /a VERIFY_ERRORS+=1
+)
+goto :eof

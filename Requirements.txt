@@ -1,0 +1,17 @@
+# MailShield – Python dependencies
+# Install with: pip install -r requirements.txt
+
+# Qt GUI framework
+PyQt5>=5.15.0
+PyQtWebEngine>=5.15.0
+
+# Security & cryptography
+bcrypt>=4.0.0
+pycryptodome>=3.20.0
+
+# Network / TLS
+certifi>=2024.1.1
+
+# Email parsing
+chardet>=5.0.0
+beautifulsoup4>=4.12.0

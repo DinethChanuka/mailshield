@@ -1,0 +1,36 @@
+# UTF-8
+#
+# MailShield – Windows version resource
+# Embedded into MailShield.exe by PyInstaller
+# Reference: https://docs.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource
+#
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 0, 0, 0),
+    prodvers=(1, 0, 0, 0),
+    mask=0x3f,
+    flags=0x0,
+    OS=0x40004,           # VOS_NT_WINDOWS32
+    fileType=0x1,         # VFT_APP
+    subtype=0x0,
+    date=(0, 0)
+  ),
+  kids=[
+    StringFileInfo([
+      StringTable(
+        u'040904B0',       # US English, Unicode
+        [
+          StringStruct(u'CompanyName',      u'MailShield'),
+          StringStruct(u'FileDescription',  u'MailShield – Secure Email Client'),
+          StringStruct(u'FileVersion',      u'1.0.0.0'),
+          StringStruct(u'InternalName',     u'MailShield'),
+          StringStruct(u'LegalCopyright',   u'Copyright © 2025 MailShield'),
+          StringStruct(u'OriginalFilename', u'MailShield.exe'),
+          StringStruct(u'ProductName',      u'MailShield'),
+          StringStruct(u'ProductVersion',   u'1.0.0.0'),
+        ]
+      )
+    ]),
+    VarFileInfo([VarStruct(u'Translation', [0x0409, 1200])])
+  ]
+)

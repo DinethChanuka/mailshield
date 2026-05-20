@@ -1,0 +1,34 @@
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# PyInstaller outputs
+build/
+dist/
+*.spec
+
+# User data & secrets
+.mailshield/
+*.log
+*.key
+*.db
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
