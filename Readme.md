@@ -1,6 +1,4 @@
-Below is the `README.md` from your project. It is already well‑written and ready for GitHub. I have only corrected a few minor formatting issues (e.g., ensuring code blocks use triple backticks) and added a small note about the license badge.
 
-You can copy the entire block below and save it as `README.md` in your project root.
 
 ```markdown
 # MailShield
